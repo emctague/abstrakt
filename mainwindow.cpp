@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QKeyEvent>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -49,5 +51,13 @@ void MainWindow::replyFinished(QNetworkReply* result) {
                             "at the end. (e.g. for \"Java\", search \"Java (Programming Language)\".)");
     } else {
         ui->result->setHtml(output + "<hr/><a href=" + obj["AbstractURL"].toString() + ">Abstract Source</a>");
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape ||
+            (event->key() == Qt::Key_Q && event->modifiers() & Qt::ControlModifier)) {
+        close ();
     }
 }
