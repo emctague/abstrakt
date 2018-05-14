@@ -2,12 +2,17 @@
 #include "ui_mainwindow.h"
 
 #include <QKeyEvent>
+#include <QCloseEvent>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    settings = new QSettings("tague.me", "Abstrakt");
+    restoreGeometry(settings->value ("geometry").toByteArray());
 
     http = new QNetworkAccessManager(this);
 
@@ -52,6 +57,12 @@ void MainWindow::replyFinished(QNetworkReply* result) {
     } else {
         ui->result->setHtml(output + "<hr/><a href=" + obj["AbstractURL"].toString() + ">Abstract Source</a>");
     }
+}
+
+void MainWindow::closeEvent (QCloseEvent *event)
+{
+    settings->setValue ("geometry", saveGeometry());
+    QWidget::closeEvent (event);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
